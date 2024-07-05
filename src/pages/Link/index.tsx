@@ -1,41 +1,35 @@
-import { useRequest } from 'ahooks';
-import React from 'react';
+import React, { useEffect } from "react";
+import Layout from "@/components/Layout";
+import { shuffleArray } from "@/utils/function";
+import { Title } from "../titleConfig";
+import LinkItem from "./LinkItem";
+import { useAppDispatch, useAppSelector } from "@/store";
+import {
+  getLinkListAsync,
+  selectLinkData,
+  selectLinkLoading,
+} from "@/store/slices/linkSlice";
 
-import Layout from '@/components/Layout';
-import { DB } from '@/utils/apis/dbConfig';
-import { getData } from '@/utils/apis/getData';
-import { staleTime } from '@/utils/constant';
-import { shuffleArray } from '@/utils/function';
-
-import { Title } from '../titleConfig';
-import s from './index.scss';
-import LinkItem from './LinkItem';
-
-interface linkType {
-  _id: string;
-  link: string;
-  avatar: string;
-  name: string;
-  descr: string;
-}
+import s from "./index.scss";
 
 const Link: React.FC = () => {
-  const { data, loading } = useRequest(getData, {
-    defaultParams: [DB.Link],
-    retryCount: 3,
-    cacheKey: `Link-${DB.Link}`,
-    staleTime
-  });
+  const dispatch = useAppDispatch();
+  const linkData = useAppSelector(selectLinkData);
+  const linkLoading = useAppSelector(selectLinkLoading);
+
+  useEffect(() => {
+    dispatch(getLinkListAsync({ pagesize: 999, current: 1 }));
+  }, []);
 
   return (
-    <Layout title={Title.Link} loading={loading} className={s.box}>
-      {shuffleArray(data?.data).map((item: linkType) => (
+    <Layout title={Title.Link} loading={linkLoading} className={s.box}>
+      {shuffleArray(linkData.list).map((item) => (
         <LinkItem
           key={item._id}
           link={item.link}
           avatar={item.avatar}
           name={item.name}
-          descr={item.descr}
+          descr={item.description}
         />
       ))}
     </Layout>

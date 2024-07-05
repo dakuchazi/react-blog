@@ -1,24 +1,25 @@
-import { useRequest } from 'ahooks';
-import React from 'react';
+import React, { useEffect } from "react";
+import Card from "@/components/Card";
+import { useAppDispatch, useAppSelector } from "@/store";
+import {
+  getNoticeListAsync,
+  selectNoticeData,
+  selectNoticeLoading,
+} from "@/store/slices/noticeSlice";
 
-import Card from '@/components/Card';
-import { DB } from '@/utils/apis/dbConfig';
-import { getOrderData } from '@/utils/apis/getOrderData';
-import { staleTime } from '@/utils/constant';
-
-import s from './index.scss';
+import s from "./index.scss";
 
 const NoticeCard: React.FC = () => {
-  const { data, loading } = useRequest(getOrderData, {
-    defaultParams: [{ dbName: DB.Notice }],
-    retryCount: 3,
-    cacheKey: `NoticeCard-${DB.Notice}`,
-    staleTime
-  });
+  const dispatch = useAppDispatch();
+  const noticeData = useAppSelector(selectNoticeData);
+  const noticeLoading = useAppSelector(selectNoticeLoading);
 
+  useEffect(() => {
+    dispatch(getNoticeListAsync());
+  }, []);
   return (
-    <Card loading={loading}>
-      <div className={s.notice}>{data?.data[0].notice}</div>
+    <Card loading={noticeLoading}>
+      <div className={s.notice}>{noticeData.content}</div>
     </Card>
   );
 };

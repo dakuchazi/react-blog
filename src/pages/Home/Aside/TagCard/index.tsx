@@ -1,30 +1,21 @@
-import { useRequest } from 'ahooks';
-import React from 'react';
+import React from "react";
 
-import Card from '@/components/Card';
-import { DB } from '@/utils/apis/dbConfig';
-import { getData } from '@/utils/apis/getData';
-import { staleTime } from '@/utils/constant';
+import Card from "@/components/Card";
 
-import s from './index.scss';
+import s from "./index.scss";
+import { useAppSelector } from "@/store";
+import { selectTagData, selectTagLoading } from "@/store/slices/tagSlice";
 
 const TagCard: React.FC = () => {
-  const { data, loading } = useRequest(getData, {
-    defaultParams: [DB.Tag],
-    retryCount: 3,
-    cacheKey: `TagCard-${DB.Tag}`,
-    staleTime
-  });
-
+  const tagData = useAppSelector(selectTagData);
+  const tagLoading = useAppSelector(selectTagLoading);
   return (
-    <Card className={s.card} loading={loading}>
-      {data?.data?.map(
-        (item: { _id: string; _openid: string; tag: string }, index: number) => (
-          <span className={s.tag} key={index}>
-            {item.tag}
-          </span>
-        )
-      )}
+    <Card className={s.card} loading={tagLoading}>
+      {tagData.map((item) => (
+        <span className={s.tag} key={item._id}>
+          {item.name}
+        </span>
+      ))}
     </Card>
   );
 };

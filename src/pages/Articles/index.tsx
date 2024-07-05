@@ -1,48 +1,45 @@
-import { useRequest, useSafeState } from 'ahooks';
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import Layout from "@/components/Layout";
+import MyPagination from "@/components/MyPagination";
+import { detailPostSize } from "@/utils/constant";
 
-import Layout from '@/components/Layout';
-import MyPagination from '@/components/MyPagination';
-import { DB } from '@/utils/apis/dbConfig';
-import { getWhereOrderPageSum } from '@/utils/apis/getWhereOrderPageSum';
-import { _ } from '@/utils/cloudBase';
-import { detailPostSize, staleTime } from '@/utils/constant';
-
-import { Title } from '../titleConfig';
-import ArtList from './ArtList';
-import Search from './Search';
+import { Title } from "../titleConfig";
+import ArtList from "./ArtList";
+import Search from "./Search";
+import {
+  getArticleListAsync,
+  selectArticleData,
+  selectArticleLoading,
+} from "@/store/slices/articleSlice";
+import { useAppDispatch, useAppSelector } from "@/store";
 
 const Articles: React.FC = () => {
-  const [page, setPage] = useSafeState(1);
+  const dispatch = useAppDispatch();
+  const articleData = useAppSelector(selectArticleData);
+  const articleLoading = useAppSelector(selectArticleLoading);
+  const [current, setCurrent] = useState(1);
+  const [title, seTtitle] = useState("");
 
-  const [where, setWhere] = useSafeState(() => ({}));
+  useEffect(() => {
+    dispatch(
+      getArticleListAsync({ pagesize: 8, current: 1, isDraft: false, title })
+    );
+  }, [current]);
 
-  const { data, loading, run } = useRequest(
-    () =>
-      getWhereOrderPageSum({
-        dbName: DB.Article,
-        where: { ...where, post: _.eq(true) },
-        page,
-        size: detailPostSize,
-        sortKey: 'date'
-      }),
-    {
-      retryCount: 3,
-      refreshDeps: [page],
-      cacheKey: `Articles-${DB.Article}-${JSON.stringify(where)}-${page}`,
-      staleTime
-    }
-  );
-
+  const onSearch = () => {
+    dispatch(
+      getArticleListAsync({ pagesize: 8, current: 1, isDraft: false, title })
+    );
+  };
   return (
     <Layout title={Title.Articles}>
-      <Search page={page} setPage={setPage} where={where} setWhere={setWhere} run={run} />
-      <ArtList articles={data?.articles.data} loading={loading} />
+      <Search value={title} onChange={seTtitle} onSearch={onSearch} />
+      <ArtList data={articleData.list} loading={articleLoading} />
       <MyPagination
-        current={page}
+        current={current}
         defaultPageSize={detailPostSize}
-        total={data?.sum.total}
-        setPage={setPage}
+        total={articleData.total}
+        setPage={setCurrent}
         autoScroll={true}
         scrollToTop={440}
       />

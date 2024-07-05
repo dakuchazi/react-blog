@@ -1,55 +1,58 @@
-import React from 'react';
+import React from "react";
+import MsgItem from "./MsgItem";
+import LayoutLoading from "@/components/LayoutLoading";
+import s from "./index.scss";
 
-import LayoutLoading from '@/components/LayoutLoading';
-
-import { MsgType } from '..';
-import s from './index.scss';
-import MsgItem from './MsgItem';
+type Comment = {
+  _id: string;
+  createDate: string;
+  content: string;
+  email: string;
+  website: string;
+  name: string;
+  avatar: string;
+  children?: Comment[];
+  from: string;
+};
 
 interface Props {
-  msgs?: MsgType[];
-  replys?: MsgType[];
-  loading?: boolean;
-  replyRun?: Function;
-  title?: string;
+  data?: Comment[];
+  loading: boolean;
+  from: string;
 }
 
-const MsgList: React.FC<Props> = ({ msgs, replys, loading, replyRun, title }) => {
+const MsgList: React.FC<Props> = ({ data, loading, from }) => {
   return (
     <>
       {loading ? (
         <LayoutLoading />
       ) : (
-        msgs?.map((msg: MsgType) => {
+        data?.map((msg) => {
           return (
             <div key={msg._id} className={s.completeMsg}>
               <MsgItem
                 _id={msg._id}
-                avatar={msg.avatar}
-                link={msg.link}
+                link={msg.website}
                 name={msg.name}
-                date={msg.date}
+                date={msg.createDate}
                 content={msg.content}
                 email={msg.email}
-                isReply={false}
-                replyRun={replyRun}
-                title={title}
+                avatar={msg.avatar}
+                from={from}
               />
-              {replys
-                ?.filter(item => item.replyId === msg._id)
-                .map((reply: MsgType) => (
+              {msg?.children &&
+                msg.children.map((reply: Comment) => (
                   <MsgItem
                     key={reply._id}
                     _id={reply._id}
-                    avatar={reply.avatar}
-                    link={reply.link}
+                    link={reply.website}
                     name={reply.name}
-                    date={reply.date}
+                    date={reply.createDate}
                     content={reply.content}
                     email={reply.email}
+                    avatar={reply.avatar}
                     isReply={true}
-                    replyRun={replyRun}
-                    title={title}
+                    from={from}
                   />
                 ))}
             </div>

@@ -1,56 +1,58 @@
-import './index.custom.scss';
+import "./index.custom.scss";
 
 import {
   BgColorsOutlined,
   CheckOutlined,
   HomeOutlined,
   MenuOutlined,
-  SettingOutlined
-} from '@ant-design/icons';
+  SettingOutlined,
+} from "@ant-design/icons";
 import {
   useEventListener,
   useLocalStorageState,
   useSafeState,
-  useUpdateEffect
-} from 'ahooks';
-import { Drawer } from 'antd';
-import classNames from 'classnames';
-import React from 'react';
-import { connect } from 'react-redux';
-import { NavLink, useNavigate } from 'react-router-dom';
+  useUpdateEffect,
+} from "ahooks";
+import { Drawer } from "antd";
+import classNames from "classnames";
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { blogAdminUrl } from "@/utils/constant";
+import { modeMap, modeMapArr } from "@/utils/modeMap";
 
-import { setMode, setNavShow } from '@/redux/actions';
-import { storeState } from '@/redux/interface';
-import { blogAdminUrl } from '@/utils/constant';
-import { modeMap, modeMapArr } from '@/utils/modeMap';
+import { useLinkList } from "./config";
+import s from "./index.scss";
+import { useAppDispatch, useAppSelector } from "@/store";
+import {
+  selectMode,
+  selectNavShow,
+  setMode,
+  setNavShow,
+} from "@/store/slices/layoutSlice";
 
-import { useLinkList } from './config';
-import s from './index.scss';
+const bodyStyle = window.document.getElementsByTagName("body")[0].style;
 
-interface Props {
-  navShow?: boolean;
-  setNavShow?: Function;
-  mode?: number;
-  setMode?: Function;
-}
-
-const bodyStyle = window.document.getElementsByTagName('body')[0].style;
-
-const Nav: React.FC<Props> = ({ navShow, setNavShow, mode, setMode }) => {
+const Nav: React.FC = () => {
   const navigate = useNavigate();
-
+  const dispatch = useAppDispatch();
+  const mode = useAppSelector(selectMode);
+  const navShow = useAppSelector(selectNavShow);
   // eslint-disable-next-line no-unused-vars
-  const [_, setLocalMode] = useLocalStorageState('localMode');
+  const [_, setLocalMode] = useLocalStorageState("localMode");
   const { navArr, secondNavArr, mobileNavArr } = useLinkList();
   const [visible, setVisible] = useSafeState(false);
 
-  const modeOptions = ['rgb(19, 38, 36)', 'rgb(110, 180, 214)', 'rgb(171, 194, 208)'];
+  const modeOptions = [
+    "rgb(19, 38, 36)",
+    "rgb(110, 180, 214)",
+    "rgb(171, 194, 208)",
+  ];
 
   useEventListener(
-    'mousewheel',
-    event => {
+    "mousewheel",
+    (event) => {
       event = event || window.event;
-      setNavShow!(event.wheelDeltaY > 0);
+      dispatch(setNavShow(event.wheelDeltaY > 0));
     },
     { target: document.body }
   );
@@ -67,12 +69,17 @@ const Nav: React.FC<Props> = ({ navShow, setNavShow, mode, setMode }) => {
       <nav className={classNames(s.nav, { [s.hiddenNav]: !navShow })}>
         <div className={s.navContent}>
           {/* 主页 */}
-          <div className={s.homeBtn} onClick={() => navigate('/')}>
+          <div className={s.homeBtn} onClick={() => navigate("/")}>
             <HomeOutlined />
           </div>
 
           {/* 后台管理 */}
-          <a className={s.adminBtn} href={blogAdminUrl} target='_blank' rel='noreferrer'>
+          <a
+            className={s.adminBtn}
+            href={blogAdminUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
             <SettingOutlined />
           </a>
 
@@ -85,9 +92,13 @@ const Nav: React.FC<Props> = ({ navShow, setNavShow, mode, setMode }) => {
                   key={index}
                   style={{ backgroundColor }}
                   className={classNames(s.modeItem, s[`modeItem${index}`])}
-                  onClick={() => setMode?.(index)}
+                  onClick={() => {
+                    dispatch(setMode(index));
+                  }}
                 >
-                  <CheckOutlined style={{ display: mode === index ? 'block' : 'none' }} />
+                  <CheckOutlined
+                    style={{ display: mode === index ? "block" : "none" }}
+                  />
                 </div>
               ))}
             </div>
@@ -127,10 +138,10 @@ const Nav: React.FC<Props> = ({ navShow, setNavShow, mode, setMode }) => {
         <MenuOutlined />
       </div>
       <Drawer
-        placement='right'
+        placement="right"
         onClose={() => setVisible(false)}
         visible={visible}
-        className='mobile-nav-box'
+        className="mobile-nav-box"
       >
         <div className={s.mobileNavBox}>
           {mobileNavArr.map((item, index) => (
@@ -160,10 +171,4 @@ const Nav: React.FC<Props> = ({ navShow, setNavShow, mode, setMode }) => {
   );
 };
 
-export default connect(
-  (state: storeState) => ({
-    navShow: state.navShow,
-    mode: state.mode
-  }),
-  { setNavShow, setMode }
-)(Nav);
+export default Nav;

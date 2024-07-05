@@ -1,29 +1,34 @@
-import dayjs from 'dayjs';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-import DisplayBar from '@/components/DisplayBar';
-import { ArticleType } from '@/pages/constant';
+import DisplayBar from "@/components/DisplayBar";
 
-import s from './index.scss';
+import s from "./index.scss";
 
 interface Props {
-  articles?: ArticleType[];
+  data: {
+    _id: string;
+    createDate: string;
+    title: string;
+    type: string;
+    tags: string[];
+    content: string;
+  }[];
   loading?: boolean;
 }
 
-const ArtList: React.FC<Props> = ({ articles, loading }) => {
+const ArtList: React.FC<Props> = ({ data, loading }) => {
   const navigate = useNavigate();
 
   return (
     <>
-      {articles?.length ? (
-        articles?.map((item: ArticleType) => (
+      {data?.length ? (
+        data?.map((item) => (
           <DisplayBar
             key={item._id}
             content={item.title}
-            right={dayjs(item.date).format('YYYY-MM-DD')}
-            onClick={() => navigate(`/post?title=${encodeURIComponent(item.titleEng)}`)}
+            right={item.createDate.split(" ")[0]}
+            onClick={() => navigate(`/artDetail?artId=${item._id}`)}
             loading={loading}
           />
         ))

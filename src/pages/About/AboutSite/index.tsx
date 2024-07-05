@@ -1,26 +1,31 @@
-import React from 'react';
+import React from "react";
 
-import AboutText from './AboutText';
-import Chart from './Chart';
+import AboutText from "./AboutText";
+import Chart from "./Chart";
 
 export interface ClassType {
-  class: string;
-  count: number;
   _id: string;
-  _openid: string;
+  createDate: string;
+  name: string;
+  count: number;
 }
 
 interface Props {
-  content?: string;
-  classes?: ClassType[];
-  artSum?: number;
+  content: string;
+  classData: ClassType[];
   className?: string;
+  mode: number;
 }
 
-const AboutSite: React.FC<Props> = ({ content, classes, artSum, className }) => {
+const AboutSite: React.FC<Props> = ({
+  content,
+  classData,
+  className,
+  mode,
+}) => {
   return (
     <div className={className}>
-      <Chart classes={classes} artSum={artSum} />
+      <Chart classData={classData} mode={mode} />
       <AboutText content={content} />
     </div>
   );

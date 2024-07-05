@@ -1,15 +1,12 @@
-import { useRequest } from 'ahooks';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import Layout from "@/components/Layout";
 
-import Layout from '@/components/Layout';
-import { DB } from '@/utils/apis/dbConfig';
-import { getData } from '@/utils/apis/getData';
-import { staleTime } from '@/utils/constant';
-
-import { Title } from '../titleConfig';
-import ClassBar from './ClassBar';
-import s from './index.scss';
+import { Title } from "../titleConfig";
+import ClassBar from "./ClassBar";
+import s from "./index.scss";
+import { useAppSelector } from "@/store";
+import { selectTypeData, selectTypeLoading } from "@/store/slices/typeSlice";
 
 interface ClassType {
   _id: string;
@@ -19,23 +16,23 @@ interface ClassType {
 
 const Classes: React.FC = () => {
   const navigate = useNavigate();
-
-  const { data, loading } = useRequest(getData, {
-    defaultParams: [DB.Class],
-    retryCount: 3,
-    cacheKey: `Classes-${DB.Class}`,
-    staleTime
-  });
+  const typeData = useAppSelector(selectTypeData);
+  const typeLoading = useAppSelector(selectTypeLoading);
 
   return (
-    <Layout title={Title.Classes} loading={loading} className={s.classBox} rows={8}>
-      {data?.data.map((item: ClassType) => (
+    <Layout
+      title={Title.Classes}
+      loading={typeLoading}
+      className={s.classBox}
+      rows={8}
+    >
+      {typeData.map((item) => (
         <ClassBar
           className={s.classItem}
           key={item._id}
-          content={item.class}
+          content={item.name}
           num={item.count}
-          onClick={() => navigate(`/artDetail?class=${encodeURIComponent(item.class)}`)}
+          onClick={() => navigate(`/artDetail?class=${item.name}`)}
         />
       ))}
     </Layout>

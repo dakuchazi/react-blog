@@ -1,35 +1,47 @@
-import { useRequest, useToggle } from 'ahooks';
-import React from 'react';
+import { useToggle } from "ahooks";
+import React, { useEffect } from "react";
+import Layout from "@/components/Layout";
+import { Title } from "../titleConfig";
+import AboutMe from "./AboutMe";
+import AboutSite from "./AboutSite";
+import Switch from "./Switch";
+import {
+  getAboutListAsync,
+  selectAboutData,
+  selectAboutLoading,
+} from "@/store/slices/aboutSlice";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { selectTypeData } from "@/store/slices/typeSlice";
+import { selectMode } from "@/store/slices/layoutSlice";
 
-import Layout from '@/components/Layout';
-import { DB } from '@/utils/apis/dbConfig';
-import { staleTime } from '@/utils/constant';
-
-import { Title } from '../titleConfig';
-import AboutMe from './AboutMe';
-import AboutSite from './AboutSite';
-import { fetchData } from './fetchData';
-import s from './index.scss';
-import Switch from './Switch';
+import s from "./index.scss";
 
 const About: React.FC = () => {
   const [state, { toggle, setLeft, setRight }] = useToggle();
+  const dispatch = useAppDispatch();
+  const typeData = useAppSelector(selectTypeData);
+  const aboutData = useAppSelector(selectAboutData);
+  const aboutLoading = useAppSelector(selectAboutLoading);
+  const mode = useAppSelector(selectMode);
 
-  const { data, loading } = useRequest(fetchData, {
-    retryCount: 3,
-    cacheKey: `About-${DB.About}`,
-    staleTime
-  });
+  useEffect(() => {
+    dispatch(getAboutListAsync());
+  }, []);
 
   return (
-    <Layout title={Title.About} loading={loading}>
-      <Switch state={state} toggle={toggle} setLeft={setLeft} setRight={setRight} />
-      <AboutMe className={state ? '' : s.hidden} content={data?.about.data[1].content} />
+    <Layout title={Title.About} loading={aboutLoading}>
+      <Switch
+        state={state}
+        toggle={toggle}
+        setLeft={setLeft}
+        setRight={setRight}
+      />
+      <AboutMe className={state ? "" : s.hidden} content={aboutData.myself} />
       <AboutSite
-        className={state ? s.hidden : ''}
-        content={data?.about.data[0].content}
-        classes={data?.classes.data}
-        artSum={data?.artSum.total}
+        className={state ? s.hidden : ""}
+        content={aboutData.website}
+        classData={typeData}
+        mode={mode}
       />
     </Layout>
   );

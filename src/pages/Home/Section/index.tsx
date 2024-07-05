@@ -1,74 +1,46 @@
-import { useRequest, useSafeState } from 'ahooks';
-import React from 'react';
-import { connect } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import MyPagination from "@/components/MyPagination";
+import { homeSize } from "@/utils/constant";
+import PostCard from "./PostCard";
+import { useAppDispatch, useAppSelector } from "@/store";
+import {
+  getArticleListAsync,
+  selectArticleData,
+  selectArticleLoading,
+} from "@/store/slices/articleSlice";
 
-import MyPagination from '@/components/MyPagination';
-import { storeState } from '@/redux/interface';
-import { DB } from '@/utils/apis/dbConfig';
-import { getPageData } from '@/utils/apis/getPageData';
-import { _ } from '@/utils/cloudBase';
-import { homeSize, staleTime } from '@/utils/constant';
+import s from "./index.scss";
 
-import s from './index.scss';
-import PostCard from './PostCard';
-
-interface theAtc {
-  classes: string;
-  content: string;
-  date: number;
-  tags: string[];
-  title: string;
-  titleEng: string;
-  url: string;
-  _id: string;
-  _openid: string;
-}
-
-interface Props {
-  artSum?: number;
-}
-
-const Section: React.FC<Props> = ({ artSum }) => {
+const Section: React.FC = () => {
   const navigate = useNavigate();
-  const [page, setPage] = useSafeState(1);
+  const [current, setCurrent] = useState(1);
+  const dispatch = useAppDispatch();
+  const articleData = useAppSelector(selectArticleData);
+  const articleLoading = useAppSelector(selectArticleLoading);
 
-  const { data, loading } = useRequest(
-    () =>
-      getPageData({
-        dbName: DB.Article,
-        where: { post: _.eq(true) },
-        sortKey: 'date',
-        isAsc: false,
-        page,
-        size: homeSize
-      }),
-    {
-      retryCount: 3,
-      refreshDeps: [page],
-      cacheKey: `Section-${DB.Article}-${page}`,
-      staleTime
-    }
-  );
+  useEffect(() => {
+    dispatch(getArticleListAsync({ current, isDraft: false, pagesize: 8 }));
+  }, [current]);
 
   return (
     <section className={s.section}>
-      {data?.data.map(({ _id, title, content, date, tags, titleEng }: theAtc) => (
+      {articleData.list.map(({ _id, title, content, createDate, tags }) => (
         <PostCard
           key={_id}
           title={title}
           content={content}
-          date={date}
+          date={createDate}
           tags={tags}
-          loading={loading}
-          onClick={() => navigate(`/post?title=${encodeURIComponent(titleEng)}`)}
+          loading={articleLoading}
+          onClick={() => navigate(`/post?id=${_id}`)}
         />
       ))}
       <MyPagination
-        current={page}
+        current={current}
         defaultPageSize={homeSize}
-        total={artSum}
-        setPage={setPage}
+        total={articleData.total}
+        setPage={setCurrent}
         autoScroll={true}
         scrollToTop={document.body.clientHeight - 80}
       />
@@ -76,4 +48,4 @@ const Section: React.FC<Props> = ({ artSum }) => {
   );
 };
 
-export default connect((state: storeState) => ({ artSum: state.artSum }))(Section);
+export default Section;

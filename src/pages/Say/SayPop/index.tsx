@@ -1,13 +1,12 @@
-import dayjs from 'dayjs';
-import React from 'react';
+import dayjs from "dayjs";
+import React from "react";
+import { myAvatar70 } from "@/utils/constant";
 
-import { myAvatar70 } from '@/utils/constant';
-
-import s from './index.scss';
+import s from "./index.scss";
 
 interface Props {
   content: string;
-  date: number;
+  date: string;
   imgs: string[];
   handlePreView: (url: string) => void;
 }
@@ -21,11 +20,15 @@ const SayPop: React.FC<Props> = ({ content, date, imgs, handlePreView }) => (
     <div className={s.contentBox}>
       <div className={s.content}>
         {content}
-        <span className={s.date}>{dayjs(date).format('YYYY-MM-DD HH:mm:ss')}</span>
+        <span className={s.date}>{date}</span>
         {!!imgs?.length && (
           <div className={s.sayImgsBox}>
             {imgs.map((img, index) => (
-              <div key={index} className={s.sayImg} onClick={() => handlePreView(img)}>
+              <div
+                key={index}
+                className={s.sayImg}
+                onClick={() => handlePreView(img)}
+              >
                 <img src={img} />
               </div>
             ))}

@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import Card from '@/components/Card';
-import { cardUrl } from '@/utils/constant';
-import { useTime } from '@/utils/hooks/useTime';
+import Card from "@/components/Card";
+import { cardUrl } from "@/utils/constant";
+import { useTime } from "@/utils/hooks/useTime";
 
-import s from './index.scss';
+import s from "./index.scss";
 
 const BlogCard: React.FC = () => {
   const { timeText } = useTime();
@@ -13,7 +13,9 @@ const BlogCard: React.FC = () => {
     <Card className={s.card}>
       <p className={s.text}>
         {timeText}，<br />
-        我叫<span className={s.color}>飞鸟</span>，<br />
+        我叫
+        <br />
+        <span className={s.color}>大苦茶籽</span>，<br />
         欢迎来到
         <br />
         我的<span className={s.color}>个人博客</span>。

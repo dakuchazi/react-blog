@@ -1,40 +1,33 @@
-import { useRequest } from 'ahooks';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import Layout from "@/components/Layout";
+import { Title } from "../titleConfig";
 
-import Layout from '@/components/Layout';
-import { DB } from '@/utils/apis/dbConfig';
-import { getData } from '@/utils/apis/getData';
-import { staleTime } from '@/utils/constant';
-
-import { Title } from '../titleConfig';
-import s from './index.scss';
-
-interface TagType {
-  _id: string;
-  _openid: string;
-  tag: string;
-}
+import s from "./index.scss";
+import { useAppSelector } from "@/store";
+import { selectTagData, selectTagLoading } from "@/store/slices/tagSlice";
 
 const Tags: React.FC = () => {
   const navigate = useNavigate();
-
-  const { data, loading } = useRequest(getData, {
-    defaultParams: [DB.Tag],
-    retryCount: 3,
-    cacheKey: `Tags-${DB.Tag}`,
-    staleTime
-  });
+  const tagData = useAppSelector(selectTagData);
+  const tagLoading = useAppSelector(selectTagLoading);
 
   return (
-    <Layout title={Title.Tags} loading={loading} className={s.tagsBox} rows={3}>
-      {data?.data.map((item: TagType) => (
+    <Layout
+      title={Title.Tags}
+      loading={tagLoading}
+      className={s.tagsBox}
+      rows={3}
+    >
+      {tagData.map((item) => (
         <span
           className={s.tagItem}
           key={item._id}
-          onClick={() => navigate(`/artDetail?tag=${encodeURIComponent(item.tag)}`)}
+          onClick={() =>
+            navigate(`/artDetail?tag=${encodeURIComponent(item.name)}`)
+          }
         >
-          {item.tag}
+          {item.name}
         </span>
       ))}
     </Layout>

@@ -1,32 +1,31 @@
-import { useRequest } from 'ahooks';
-import React from 'react';
-
-import Layout from '@/components/Layout';
-import { DB } from '@/utils/apis/dbConfig';
-import { getOrderData } from '@/utils/apis/getOrderData';
-import { staleTime } from '@/utils/constant';
-
-import { Title } from '../titleConfig';
-import TimeItem from './TimeItem';
-
-interface Log {
-  _id: string;
-  date: number;
-  logContent: string[];
-}
+import React, { useEffect } from "react";
+import Layout from "@/components/Layout";
+import { Title } from "../titleConfig";
+import TimeItem from "./TimeItem";
+import { useAppDispatch, useAppSelector } from "@/store";
+import {
+  getLogListAsync,
+  selectLogData,
+  selectLogLoading,
+} from "@/store/slices/logSlice";
 
 const Log: React.FC = () => {
-  const { data, loading } = useRequest(getOrderData, {
-    defaultParams: [{ dbName: DB.Log, sortKey: 'date' }],
-    retryCount: 3,
-    cacheKey: `Log-${DB.Log}`,
-    staleTime
-  });
+  const dispatch = useAppDispatch();
+  const workData = useAppSelector(selectLogData);
+  const workLoading = useAppSelector(selectLogLoading);
+
+  useEffect(() => {
+    dispatch(getLogListAsync({ pagesize: 999, current: 1 }));
+  }, []);
 
   return (
-    <Layout title={Title.Log} loading={loading}>
-      {data?.data.map(({ _id, date, logContent }: Log) => (
-        <TimeItem key={_id} date={date} logContent={logContent} />
+    <Layout title={Title.Log} loading={workLoading}>
+      {workData.list.map(({ _id, createDate, content }) => (
+        <TimeItem
+          key={_id}
+          date={createDate.split(" ")[0]}
+          logContent={content}
+        />
       ))}
     </Layout>
   );

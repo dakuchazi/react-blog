@@ -22,6 +22,14 @@ module.exports = merge(common, {
       logging: 'warn', // warn以上的信息，才会打印
       overlay: true // 当出现编译错误或警告时，在浏览器中显示全屏覆盖
     },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:7001', // 目标服务器
+        changeOrigin: true,
+        secure: false, // 如果是https接口，需要配置这个参数
+        // pathRewrite: { '^/api': '' } // 可选。重写路径，这样你可以在发出请求时省略/api
+      },
+    },
     // 解决路由跳转404问题
     historyApiFallback: true
   },

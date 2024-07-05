@@ -1,11 +1,11 @@
-import dayjs from 'dayjs';
-import React from 'react';
+import dayjs from "dayjs";
+import React from "react";
 
-import s from './index.scss';
+import s from "./index.scss";
 
 interface Props {
-  date: number;
-  logContent: string[];
+  date: string;
+  logContent: string;
 }
 
 const TimeItem: React.FC<Props> = ({ date, logContent }) => {
@@ -15,15 +15,11 @@ const TimeItem: React.FC<Props> = ({ date, logContent }) => {
         <div className={s.dot}>
           <div className={s.dotIn} />
         </div>
-        {dayjs(date).format('YYYY-MM-DD')}
+        {date}
       </div>
 
       <ul className={s.content}>
-        {logContent.map((log, index) => (
-          <li key={index} className={s.timeLi}>
-            {log}
-          </li>
-        ))}
+        <li className={s.timeLi}>{logContent}</li>
       </ul>
     </div>
   );

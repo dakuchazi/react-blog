@@ -1,12 +1,9 @@
-import './pagination.custom.scss';
+import "./pagination.custom.scss";
+import { Pagination } from "antd";
+import React from "react";
+import { useAppDispatch } from "@/store";
 
-import { Pagination } from 'antd';
-import React from 'react';
-import { connect } from 'react-redux';
-
-import { setNavShow } from '@/redux/actions';
-
-import s from './index.scss';
+import s from "./index.scss";
 
 interface Props {
   current?: number;
@@ -15,7 +12,6 @@ interface Props {
   setPage?: Function;
   scrollToTop?: number;
   autoScroll?: boolean;
-  setNavShow?: Function;
 }
 
 const MyPagination: React.FC<Props> = ({
@@ -25,12 +21,11 @@ const MyPagination: React.FC<Props> = ({
   setPage,
   scrollToTop = 0,
   autoScroll = false,
-  setNavShow
 }) => {
   return (
     <>
       {total > defaultPageSize ? (
-        <div id='myPagination' className={s.pageBox}>
+        <div id="myPagination" className={s.pageBox}>
           <Pagination
             current={current}
             total={total}
@@ -39,7 +34,6 @@ const MyPagination: React.FC<Props> = ({
             showTitle={false}
             onChange={(page: number) => {
               setPage?.(page);
-              setNavShow?.(false);
               autoScroll && window.scrollTo(0, scrollToTop);
             }}
           />
@@ -49,6 +43,4 @@ const MyPagination: React.FC<Props> = ({
   );
 };
 
-export default connect(() => ({}), {
-  setNavShow
-})(MyPagination);
+export default MyPagination;

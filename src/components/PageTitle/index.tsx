@@ -1,7 +1,7 @@
-import classNames from 'classnames';
-import React from 'react';
+import classNames from "classnames";
+import React from "react";
 
-import s from './index.scss';
+import s from "./index.scss";
 
 interface Props {
   title?: string;
@@ -13,8 +13,8 @@ const PageTitle: React.FC<Props> = ({ title, desc, className, children }) => {
   return (
     <div className={classNames(s.box, className)}>
       <div className={s.title}>{title}</div>
-      {desc && <div className={s.desc}>{desc}</div>}
       {children}
+      {desc && <div className={s.desc}>{desc}</div>}
     </div>
   );
 };

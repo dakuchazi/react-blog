@@ -1,25 +1,29 @@
-import './index.custom.scss';
+import "./index.custom.scss";
+import { VerticalAlignTopOutlined } from "@ant-design/icons";
+import { BackTop } from "antd";
+import React from "react";
+import { useAppDispatch } from "@/store";
+import { setNavShow } from "@/store/slices/layoutSlice";
 
-import { VerticalAlignTopOutlined } from '@ant-design/icons';
-import { BackTop } from 'antd';
-import React from 'react';
-import { connect } from 'react-redux';
-
-import { setNavShow } from '@/redux/actions';
-
-import s from './index.scss';
+import s from "./index.scss";
 
 interface Props {
   setNavShow?: Function;
 }
 
-const BackToTop: React.FC<Props> = ({ setNavShow }) => {
+const BackToTop: React.FC<Props> = () => {
+  const dispatch = useAppDispatch();
   const backTop = () => {
-    setNavShow?.(true);
+    dispatch(setNavShow(true));
   };
 
   return (
-    <BackTop duration={700} visibilityHeight={300} onClick={backTop} className='BackTop'>
+    <BackTop
+      duration={700}
+      visibilityHeight={300}
+      onClick={backTop}
+      className="BackTop"
+    >
       <div className={s.backTop}>
         <VerticalAlignTopOutlined />
       </div>
@@ -27,6 +31,4 @@ const BackToTop: React.FC<Props> = ({ setNavShow }) => {
   );
 };
 
-export default connect(() => ({}), {
-  setNavShow
-})(BackToTop);
+export default BackToTop;
