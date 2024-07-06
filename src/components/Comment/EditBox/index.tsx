@@ -13,7 +13,7 @@ import { myAvatar70, myEmail, myLink, myName, QQ } from "@/utils/constant";
 import AdminBox from "./AdminBox";
 import Emoji from "./Emoji";
 import PreShow from "./PreShow";
-import axios from "@/utils/apis/axios";
+import axios from "@/utils/axios";
 import API from "@/utils/api";
 import { useAppDispatch, useAppSelector } from "@/store";
 import {

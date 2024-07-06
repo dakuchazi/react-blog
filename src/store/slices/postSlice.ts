@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../index";
-import axios from "@/utils/apis/axios";
+import axios from "@/utils/axios";
 import API from "@/utils/api";
 
 export type PostData = {

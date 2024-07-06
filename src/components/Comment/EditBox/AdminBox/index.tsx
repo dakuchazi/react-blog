@@ -3,7 +3,7 @@ import { message } from "antd";
 import classNames from "classnames";
 import React, { useRef } from "react";
 import { myAvatar, myEmail, myKey, myLink, myName } from "@/utils/constant";
-import axios from "@/utils/apis/axios";
+import axios from "@/utils/axios";
 import API from "@/utils/api";
 import { useAppDispatch } from "@/store";
 import {
