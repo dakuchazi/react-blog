@@ -18,8 +18,6 @@ const DataCard: React.FC = () => {
   const articleData = useAppSelector(selectArticleData);
   const articleLoading = useAppSelector(selectArticleLoading);
 
-  console.log("===typeData===", typeData);
-
   return (
     <Card className={s.card} loading={articleLoading}>
       <div className={s.blogData} onClick={() => navigate("/articles")}>

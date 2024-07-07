@@ -32,7 +32,7 @@ const Classes: React.FC = () => {
           key={item._id}
           content={item.name}
           num={item.count}
-          onClick={() => navigate(`/artDetail?class=${item.name}`)}
+          onClick={() => navigate(`/artList?typeId=${item._id}&key=type`)}
         />
       ))}
     </Layout>

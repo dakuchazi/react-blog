@@ -1,26 +1,53 @@
 import useUrlState from "@ahooksjs/use-url-state";
 import { useSafeState } from "ahooks";
 
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import DisplayBar from "@/components/DisplayBar";
 import Layout from "@/components/Layout";
 import MyPagination from "@/components/MyPagination";
 
 import { detailPostSize } from "@/utils/constant";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import {
+  getArticleListAsync,
   selectArticleData,
   selectArticleLoading,
 } from "@/store/slices/articleSlice";
 
 const ArtList: React.FC = () => {
   const [query] = useUrlState();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [current, setCurrent] = useSafeState(1);
   const articleData = useAppSelector(selectArticleData);
   const articleLoading = useAppSelector(selectArticleLoading);
+
+  useEffect(() => {
+    console.log(query);
+
+    if (query.key === "type") {
+      dispatch(
+        getArticleListAsync({
+          pagesize: 8,
+          current: 1,
+          isDraft: false,
+          typeId: query.typeId,
+        })
+      );
+    }
+    if (query.key === "tag") {
+      dispatch(
+        getArticleListAsync({
+          pagesize: 8,
+          current: 1,
+          isDraft: false,
+          tags: [query.tag],
+        })
+      );
+    }
+  }, []);
 
   return (
     <Layout title={query.tag || query.class}>
@@ -28,9 +55,9 @@ const ArtList: React.FC = () => {
         <DisplayBar
           key={item._id}
           content={item.title}
-          right={item.createDate}
+          right={item.createDate.split(" ")[0]}
           loading={articleLoading}
-          onClick={() => navigate(`/post?id=${item._id}`)}
+          onClick={() => navigate(`/artDetail?artId=${item._id}`)}
         />
       ))}
       <MyPagination
