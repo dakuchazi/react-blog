@@ -10,9 +10,11 @@ interface Props {
 }
 
 const ShowItem: React.FC<Props> = ({ cover, link, name, descr }) => {
+  console.log(link);
+
   return (
     <div style={{ backgroundImage: `url(${cover})` }} className={s.showItem}>
-      <a href={link} rel='noreferrer' target='_blank' className={s.link}>
+      <a href={'http://' + link} rel='noreferrer' target='_blank' className={s.link}>
         <div className={s.title}>
           <span>{name}</span>
         </div>

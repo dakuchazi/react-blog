@@ -33,7 +33,7 @@ const Section: React.FC = () => {
           date={createDate}
           tags={tags}
           loading={articleLoading}
-          onClick={() => navigate(`/post?id=${_id}`)}
+          onClick={() => navigate(`/artDetail?artId=${_id}`)}
         />
       ))}
       <MyPagination
