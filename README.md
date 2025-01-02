@@ -1,8 +1,14 @@
-# 本博客参考：https://github.com/lzxjack/react-blog，主要使用了前辈的UI设计，自己更换了一些库。（包括这篇MD也是参考前辈的）
-
 > 这是个人博客系统的**博客展示页面**，**后台管理页面**仓库见<a href="https://github.com/dakuchazi/react-admin" target="_blank">「react-blog-admin」</a>。
 
 Hi，这是我自己用 React 写的个人博客系统，欢迎大家`star`、`fork`，互相交流学习！💪💪
+
+
+
+## 致谢
+
+https://github.com/lzxjack/react-blog，主要使用了前辈的UI设计，自己更换了一些库。（包括这篇MD也是参考前辈的）
+
+
 
 ## 博客已于重构
 
