@@ -6,7 +6,9 @@ Hi，这是我自己用 React 写的个人博客系统，欢迎大家`star`、`f
 
 ## 致谢
 
-https://github.com/lzxjack/react-blog，主要使用了前辈的UI设计，自己更换了一些库。（包括这篇MD也是参考前辈的）
+[飞鸟](https://github.com/lzxjack/react-blog)
+
+主要使用了前辈的UI设计，自己更换了一些库。（包括这篇MD也是参考前辈的）
 
 
 
