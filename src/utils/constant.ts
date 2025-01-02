@@ -1,7 +1,7 @@
 export const source_github = "https://github.com/dakuchazi/react-blog";
 
 export const icp_site = "https://beian.miit.gov.cn/#/Integrated/index";
-export const icp_no = "浙ICP备2020043821号-1";
+export const icp_no = "xxxxxxx";
 
 export const blogAdminUrl = "http://www.admin.xukucha.cn/";
 
@@ -59,7 +59,7 @@ export const defaultCommentAvatar =
   "https://s3.bmp.ovh/imgs/2024/07/05/4c96a570c675b68b.webp";
 
 //生产环境baseUrl
-export const PRO_URL = "http://8.138.87.86:7001";
+export const PRO_URL = "http://localhost:7001";
 
 //开发环境baseUrl
 export const DEV_URL = "http://localhost:7001";
